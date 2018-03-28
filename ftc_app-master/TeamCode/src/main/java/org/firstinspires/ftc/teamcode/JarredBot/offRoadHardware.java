@@ -1,20 +1,24 @@
 package org.firstinspires.ftc.teamcode.JarredBot;
 
+import android.graphics.drawable.GradientDrawable;
+
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
  * Created by isaac.blandin on 2/28/18.
  */
 
 public abstract class offRoadHardware extends LinearOpMode{
-
-    //declare modern robotics gyroscope
-
-    public IntegratingGyroscope gyro;
-    public ModernRoboticsI2cGyro imu;
 
     //Declares elevation motors
     DcMotor rightFrontElevation;
@@ -28,11 +32,30 @@ public abstract class offRoadHardware extends LinearOpMode{
     DcMotor rightBackDrive;
     DcMotor leftBackDrive;
 
+    double xDrive;
+    double yDrive;
+
+    double xOffset;
+    double yOffset;
+
+    double xPower;
+    double yPower;
+
+    double rfVAr;
+    double rbVar;
+    double lfVar;
+    double lbVar;
+
+    double max;
+
+    // declares gyro
+    BNO055IMU imu;
+    Orientation lastAngles = new Orientation();
+
 
     public void initOffRoad () {
-        //initializes gyro
-        imu = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
-        gyro = (IntegratingGyroscope) imu;
+
+
 
         //initializes elevation motors
         rightFrontElevation = hardwareMap.dcMotor.get("rfe");
@@ -45,6 +68,9 @@ public abstract class offRoadHardware extends LinearOpMode{
         rightBackElevation.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBackElevation.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        rightFrontElevation.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackElevation.setDirection(DcMotorSimple.Direction.REVERSE);
+
         //initializes drive motors
         rightFrontDrive = hardwareMap.dcMotor.get("rfd");
         leftFrontDrive = hardwareMap.dcMotor.get("lfd");
@@ -56,7 +82,34 @@ public abstract class offRoadHardware extends LinearOpMode{
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        imu.calibrate();
+        leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //initialize gyro
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.loggingEnabled = false;
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+
+        imu.initialize(parameters);
+
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        telemetry.addData("Mode", "Calibrating");
+        telemetry.update();
+
+        while (!isStopRequested() && !imu.isGyroCalibrated()){
+            sleep(50);
+            idle();
+        }
+
+        telemetry.addData("Mode", "waiting for start");
+        telemetry.addData("imu calibration", imu.getCalibrationStatus().toString());
+        telemetry.update();
+
 
     }
 }
