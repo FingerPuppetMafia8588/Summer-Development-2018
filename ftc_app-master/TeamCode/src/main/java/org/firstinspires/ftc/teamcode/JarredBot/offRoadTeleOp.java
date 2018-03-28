@@ -10,7 +10,6 @@ public class offRoadTeleOp extends offRoadHardware{
         initOffRoad();
 
         waitForStart();
-
         while (opModeIsActive()) {
 
             //grabs input for two joystick arcade tank drive
@@ -23,18 +22,21 @@ public class offRoadTeleOp extends offRoadHardware{
             leftFrontDrive.setPower(yDrive + xDrive);
             leftBackDrive.setPower(yDrive + xDrive);
 
-
+            //pull angles from gyro for x and y axes
             xOffset = lastAngles.thirdAngle;
             yOffset = lastAngles.secondAngle;
 
+            //scale the angle in degrees in order to be acceptable by motor
             xPower = xOffset/75 + 0.2;
             yPower = yOffset/75 + 0.2;
 
+            //kinematic equation for leveling the robot when off angle
             rfVAr = yPower + xPower;
             rbVar = -yPower - xPower;
             lfVar = yPower - xPower;
             lbVar = -yPower + xPower;
 
+            //scale combined values down to -1 to 1 values
             max = rfVAr;
             if (rbVar > max){
                 max = rbVar;
@@ -51,6 +53,7 @@ public class offRoadTeleOp extends offRoadHardware{
             lfVar = lfVar/max;
             lbVar = lbVar/max;
 
+            //prevent motors from running unless angles are above certain threshold
             if (Math.abs(xOffset) > 8 || Math.abs(yOffset) > 8){
                 rightFrontElevation.setPower(rfVAr);
                 rightBackElevation.setPower(rbVar);
