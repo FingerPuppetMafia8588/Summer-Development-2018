@@ -26,8 +26,8 @@ public class offRoadTeleOp extends offRoadHardware{
             leftBackDrive.setPower(yDrive + xDrive);
 
             //pull angles from gyro for x and y axes
-            xOffset = lastAngles.thirdAngle;
-            yOffset = lastAngles.secondAngle;
+            //xOffset = lastAngles.thirdAngle;
+            //yOffset = lastAngles.secondAngle;
 
             //scale the angle in degrees in order to be acceptable by motor
             xPower = xOffset/75 + 0.2;
