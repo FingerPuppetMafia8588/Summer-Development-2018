@@ -35,8 +35,9 @@ public abstract class offRoadHardware extends LinearOpMode{
     double xDrive;
     double yDrive;
 
-    double xOffset;
-    double yOffset;
+    int xOffset;
+    int yOffset;
+    int elevation;
 
     double xPower;
     double yPower;
@@ -51,6 +52,7 @@ public abstract class offRoadHardware extends LinearOpMode{
     // declares gyro
     BNO055IMU imu;
     Orientation lastAngles = new Orientation();
+    Orientation angles;
 
 
     public void initOffRoad () {
@@ -95,8 +97,6 @@ public abstract class offRoadHardware extends LinearOpMode{
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
         imu.initialize(parameters);
-
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         telemetry.addData("Mode", "Calibrating");
         telemetry.update();
