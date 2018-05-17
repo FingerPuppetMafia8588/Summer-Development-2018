@@ -21,6 +21,8 @@ public class offRoadDrive extends offRoadHardware{
         yOffset = 0;
         elevation = 0;
 
+        balance = true;
+
         rightFrontElevation.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackElevation.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFrontElevation.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -61,21 +63,42 @@ public class offRoadDrive extends offRoadHardware{
                 elevation -= 2;
             }
 
-            if (gamepad1.dpad_up|| angles.thirdAngle > 5){
-                yOffset += 2;
-            }
-            if (gamepad1.dpad_down|| angles.thirdAngle < -5){
-                yOffset -= 2;
-            }
-            if (gamepad1.dpad_right || angles.secondAngle < -5){
-                xOffset -= 2;
-            }
-            if (gamepad1.dpad_left || angles.secondAngle > 5){
-                xOffset += 2;
+            if (gamepad1.y){
+                if (balance){
+                    balance = false;
+                } else {
+                    balance = true;
+                }
+                sleep(70);
             }
 
-
-
+            if (!balance) {
+                if (gamepad1.dpad_up) {
+                    yOffset += 2;
+                }
+                if (gamepad1.dpad_down) {
+                    yOffset -= 2;
+                }
+                if (gamepad1.dpad_right) {
+                    xOffset -= 2;
+                }
+                if (gamepad1.dpad_left) {
+                    xOffset += 2;
+                }
+            } else {
+                if (angles.thirdAngle > 5) {
+                    yOffset += 2;
+                }
+                if (angles.thirdAngle < -5) {
+                    yOffset -= 2;
+                }
+                if (angles.secondAngle < -5) {
+                    xOffset -= 2;
+                }
+                if (angles.secondAngle > 5) {
+                    xOffset += 2;
+                }
+            }
             rightFrontElevation.setTargetPosition(0 - xOffset - yOffset + elevation);
             rightBackElevation.setTargetPosition(0 + xOffset - yOffset - elevation);
             leftFrontElevation.setTargetPosition(0 + xOffset - yOffset + elevation);

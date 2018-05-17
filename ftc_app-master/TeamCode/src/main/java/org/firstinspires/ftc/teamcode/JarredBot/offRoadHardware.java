@@ -39,6 +39,8 @@ public abstract class offRoadHardware extends LinearOpMode{
     int yOffset;
     int elevation;
 
+    boolean balance;
+
     double xPower;
     double yPower;
 

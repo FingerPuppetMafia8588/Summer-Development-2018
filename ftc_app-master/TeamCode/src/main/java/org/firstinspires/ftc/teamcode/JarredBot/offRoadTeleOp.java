@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.JarredBot;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  */
 
 @TeleOp(name = "offroad")
+@Disabled
 public class offRoadTeleOp extends offRoadHardware{
 
     public void runOpMode() {
