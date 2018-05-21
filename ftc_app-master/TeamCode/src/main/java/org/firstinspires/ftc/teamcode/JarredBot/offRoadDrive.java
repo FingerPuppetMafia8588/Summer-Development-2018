@@ -99,6 +99,7 @@ public class offRoadDrive extends offRoadHardware{
                     xOffset += 2;
                 }
             }
+
             rightFrontElevation.setTargetPosition(0 - xOffset - yOffset + elevation);
             rightBackElevation.setTargetPosition(0 + xOffset - yOffset - elevation);
             leftFrontElevation.setTargetPosition(0 + xOffset - yOffset + elevation);
