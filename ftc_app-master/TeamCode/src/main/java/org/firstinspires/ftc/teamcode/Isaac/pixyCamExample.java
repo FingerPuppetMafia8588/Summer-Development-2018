@@ -8,6 +8,20 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 /**
  * Created by isaac.blandin on 7/22/18.
  */
+
+//opmode created to test pulling data from a pixy cmucam
+/*
+Bytes    16-bit word    Description
+----------------------------------------------------------------
+0, 1     y              sync: 0xaa55=normal object, 0xaa56=color code object
+2, 3     y              checksum (sum of all 16-bit words 2-6, that is, bytes 4-13)
+4, 5     y              signature number
+6, 7     y              x center of object
+8, 9     y              y center of object
+10, 11   y              width of object
+12, 13   y              height of object
+ */
+
 @TeleOp(name = "pixy test")
 public class pixyCamExample extends LinearOpMode{
 
