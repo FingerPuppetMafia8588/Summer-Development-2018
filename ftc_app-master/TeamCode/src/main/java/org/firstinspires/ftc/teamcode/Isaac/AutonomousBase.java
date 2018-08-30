@@ -43,7 +43,7 @@ public abstract class AutonomousBase extends RobotHardware {
         setDrivePower(power,power);
     }
 
-    protected void drive(double power, double inches){
+    protected void drive(double power, double inches){ // Moves the robot in a straight line at a determined power and distance
         resetEncoders();
         drive(power);
         double targetPosition = inches*ORBITAL20_PPR*DRIVE_GEAR_RATIO/WHEEL_CIRC;
@@ -65,7 +65,7 @@ public abstract class AutonomousBase extends RobotHardware {
         telemetry.update();
     }
 
-    protected void turnHeading(double power, int degreeTarget){
+    protected void turnHeading(double power, int degreeTarget){ //turns the robot at a set speed to a given z-axis value
         heading = getHeading();
 
         while (opModeIsActive() && Math.abs(heading - degreeTarget) > degreeTarget/2){
