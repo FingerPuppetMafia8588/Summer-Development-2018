@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.JarredBot;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
  * Created by isaac.blandin on 4/17/18.
  */
 @TeleOp(name = "testoff")
+@Disabled
 public class offRoadDrive extends offRoadHardware{
     public void runOpMode() {
 
