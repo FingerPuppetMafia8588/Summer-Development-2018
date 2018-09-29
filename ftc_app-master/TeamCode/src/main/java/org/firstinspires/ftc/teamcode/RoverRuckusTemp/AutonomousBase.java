@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Isaac;
+package org.firstinspires.ftc.teamcode.RoverRuckusTemp;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,12 +14,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 public abstract class AutonomousBase extends RobotHardware {
 
     protected void resetEncoders(){
-        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        while (opModeIsActive() && rightDrive.getCurrentPosition() > 3 && leftDrive.getCurrentPosition() > 3){}
-        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        while (opModeIsActive() && rightDrive.getMode() != DcMotor.RunMode.RUN_USING_ENCODER && leftDrive.getMode() != DcMotor.RunMode.RUN_USING_ENCODER){}
+        rfDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lfDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rbDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lbDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        while (opModeIsActive() && rfDrive.getCurrentPosition() > 3 && lfDrive.getCurrentPosition() > 3){}
+        rfDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lfDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rbDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lbDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        while (opModeIsActive() && rfDrive.getMode() != DcMotor.RunMode.RUN_USING_ENCODER && lfDrive.getMode() != DcMotor.RunMode.RUN_USING_ENCODER){}
     }
     protected void wait(double seconds) {
         ElapsedTime t = new ElapsedTime(System.nanoTime());
@@ -27,8 +31,8 @@ public abstract class AutonomousBase extends RobotHardware {
 
         }
     }
-    protected int getRightAbs(){return Math.abs(rightDrive.getCurrentPosition());}
-    protected int getleftAbs(){return Math.abs(leftDrive.getCurrentPosition());}
+    protected int getRightAbs(){return Math.abs(rfDrive.getCurrentPosition());}
+    protected int getleftAbs(){return Math.abs(lfDrive.getCurrentPosition());}
 
     protected int getHeading(){
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -40,7 +44,7 @@ public abstract class AutonomousBase extends RobotHardware {
     ///////////////////////////////////
 
     protected void drive(double power){
-        setDrivePower(power,power);
+        setDrivePower(power,power, power, power);
     }
 
     protected void drive(double power, double inches){ // Moves the robot in a straight line at a determined power and distance
@@ -70,19 +74,19 @@ public abstract class AutonomousBase extends RobotHardware {
 
         while (opModeIsActive() && Math.abs(heading - degreeTarget) > degreeTarget/2){
             if (heading > degreeTarget){
-                setDrivePower(-power, power);
+                setDrivePower(-power, power, -power, power);
             }
             if (heading < degreeTarget){
-                setDrivePower(power, -power);
+                setDrivePower(power, -power, power, -power);
             }
             heading = getHeading();
         }
         while (opModeIsActive() && Math.abs(heading-degreeTarget) > 2){
             if (heading > degreeTarget){
-                setDrivePower(-power/2,power/2);
+                setDrivePower(-power/2,power/2, -power/2, power/2);
             }
             if (heading < degreeTarget){
-                setDrivePower(power/2, -power/2);
+                setDrivePower(power/2, -power/2, power/2, -power/2);
             }
             heading = getHeading();
         }

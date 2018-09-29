@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.Isaac;
+package org.firstinspires.ftc.teamcode.RoverRuckusTemp;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
@@ -12,8 +12,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 public abstract class RobotHardware extends RobotBase {
 
     //declares drive motors
-    protected DcMotor rightDrive;
-    protected DcMotor leftDrive;
+    protected DcMotor rfDrive;
+    protected DcMotor lfDrive;
+    protected DcMotor rbDrive;
+    protected DcMotor lbDrive;
 
     // declares gyro
     protected BNO055IMU imu;
@@ -21,6 +23,7 @@ public abstract class RobotHardware extends RobotBase {
     protected Orientation angles;
 
     protected int heading;
+
 
     protected final double WHEEL_DIAMTER = 4;
     protected final double WHEEL_CIRC = WHEEL_DIAMTER*Math.PI;
@@ -30,13 +33,18 @@ public abstract class RobotHardware extends RobotBase {
     @Override
     protected void initRobot(RobotRunType robotRunType){
 
-        rightDrive = hardwareMap.dcMotor.get("right_drive");
-        leftDrive = hardwareMap.dcMotor.get("left_drive");
+        rfDrive = hardwareMap.dcMotor.get("right_front");
+        lfDrive = hardwareMap.dcMotor.get("left_front");
+        rbDrive = hardwareMap.dcMotor.get("right_back");
+        lbDrive = hardwareMap.dcMotor.get("left_back");
 
-        rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        lfDrive.setDirection(DcMotor.Direction.REVERSE);
+        lbDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rfDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lfDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rbDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lbDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // initialize gyro if starting in autonomous
         if (robotRunType == RobotRunType.AUTONOMOUS){
@@ -68,14 +76,17 @@ public abstract class RobotHardware extends RobotBase {
 
     }
     // method to simplify setting drive power for the robot drive motors
-    protected void setDrivePower (double rightPower, double leftPower) {
-        rightDrive.setPower(rightPower);
-        leftDrive.setPower(leftPower);
+    protected void setDrivePower (double rightFrontPower, double leftFrontPower, double rightBackPower, double leftBackPower) {
+        rfDrive.setPower(rightFrontPower);
+        lfDrive.setPower(leftFrontPower);
+        rbDrive.setPower(rightBackPower);
+        lbDrive.setPower(leftBackPower);
+
     }
 
     //method to easily stop the robot
     protected void stopDrive() {
-        setDrivePower(0, 0);
+        setDrivePower(0, 0, 0 ,0);
     }
 
 }
