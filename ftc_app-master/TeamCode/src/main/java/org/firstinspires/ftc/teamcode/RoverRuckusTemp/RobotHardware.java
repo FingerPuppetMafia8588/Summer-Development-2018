@@ -22,6 +22,8 @@ public abstract class RobotHardware extends RobotBase {
     protected Orientation lastAngles = new Orientation();
     protected Orientation angles;
 
+    double globalAngle;
+
     protected int heading;
 
 
@@ -53,6 +55,7 @@ public abstract class RobotHardware extends RobotBase {
 
             parameters.mode = BNO055IMU.SensorMode.IMU;
             parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+            parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
             parameters.loggingEnabled = false;
 
             imu = hardwareMap.get(BNO055IMU.class, "imu");

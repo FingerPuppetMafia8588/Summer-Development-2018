@@ -34,11 +34,6 @@ public abstract class AutonomousBase extends RobotHardware {
     protected int getRightAbs(){return Math.abs(rfDrive.getCurrentPosition());}
     protected int getleftAbs(){return Math.abs(lfDrive.getCurrentPosition());}
 
-    protected int getHeading(){
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return (int)angles.firstAngle;
-    }
-
     ///////////////////////////////////
     /////////////Movement//////////////
     ///////////////////////////////////
@@ -70,7 +65,8 @@ public abstract class AutonomousBase extends RobotHardware {
     }
 
     protected void turnHeading(double power, int degreeTarget){ //turns the robot at a set speed to a given z-axis value
-        heading = getHeading();
+        resetAngle();
+        heading = getAngle();
 
         while (opModeIsActive() && Math.abs(heading - degreeTarget) > degreeTarget/2){
             if (heading > degreeTarget){
@@ -79,20 +75,51 @@ public abstract class AutonomousBase extends RobotHardware {
             if (heading < degreeTarget){
                 setDrivePower(power, -power, power, -power);
             }
-            heading = getHeading();
+            heading = getAngle();
         }
-        while (opModeIsActive() && Math.abs(heading-degreeTarget) > 2){
+        while (opModeIsActive() && Math.abs(heading - degreeTarget) > 2){
             if (heading > degreeTarget){
                 setDrivePower(-power/2,power/2, -power/2, power/2);
             }
             if (heading < degreeTarget){
                 setDrivePower(power/2, -power/2, power/2, -power/2);
             }
-            heading = getHeading();
+            heading = getAngle();
         }
         stopDrive();
         telemetry.addLine("Turned " + degreeTarget + "degrees to target");
         telemetry.update();
+        resetAngle();
+    }
+
+    private void resetAngle()
+    {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        globalAngle = 0;
+    }
+
+    private int getAngle()
+    {
+        // We experimentally determined the Z axis is the axis we want to use for heading angle.
+        // We have to process the angle because the imu works in euler angles so the Z axis is
+        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
+        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
+
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return (int)globalAngle;
     }
 
 }
