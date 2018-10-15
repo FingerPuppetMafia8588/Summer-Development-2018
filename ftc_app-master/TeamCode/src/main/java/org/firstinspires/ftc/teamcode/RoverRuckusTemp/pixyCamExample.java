@@ -57,6 +57,9 @@ public class pixyCamExample extends LinearOpMode{
             telemetry.addData("Byte 12", pixy.read8(12));
             telemetry.addData("Byte 13", pixy.read8(13));
             telemetry.update();
+
+
+
         }
         stop();
     }
